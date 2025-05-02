@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TodoMVC with Spring Boot</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="container mt-5">
+    <section class="todoapp">
+        <header class="header mb-4">
+            <h1>todos</h1>
+
+            <form th:action="@{/}" method="post" th:object="${todoItem}">
+                <input class="form-control mb-2 new-todo" placeholder="What needs to be done?" autofocus
+                       th:field="*{title}">
+
+                <!-- Display error message when the user submits an empty todo -->
+                <div th:if="${#fields.hasErrors('title')}" style="color: red;">
+                    <p th:errors="*{title}">Title Error</p>
+                </div>
+            </form>
+        </header>
+
+        <section class="main" th:if="${todos.size() > 0}">
+            <ul class="list-group">
+                <li class="list-group-item d-flex justify-content-between align-items-center"
+                    th:each="item : ${todos}">
+                    
+                    <form th:action="@{'/toggle/' + ${item.id}}" method="post">
+                        <button class="btn btn-sm"
+                                th:classappend="${item.completed} ? 'btn-success' : 'btn-outline-secondary'">
+                            ✔
+                        </button>
+                    </form>
+
+                    <span th:text="${item.title}" class="mx-2"
+                          th:classappend="${item.completed} ? 'text-decoration-line-through' : ''">
+                    </span>
+
+                    <form th:action="@{'/delete/' + ${item.id}}" method="post">
+                        <button class="btn btn-danger btn-sm">✖</button>
+                    </form>
+                </li>
+            </ul>
+        </section>
+
+        <footer class="info mt-5">
+            <p>Created by <a href="http://yourwebsite.com">Your Name</a></p>
+            <p>Part of <a href="http://todomvc.com">TodoMVC</a></p>
+        </footer>
+    </section>
+</body>
+</html>
